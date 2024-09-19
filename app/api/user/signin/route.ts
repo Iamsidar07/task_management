@@ -17,12 +17,12 @@ export async function POST(req: NextRequest) {
     }
     const isValidPassword = await bcryptjs.compare(
       data.password,
-      user.password,
+      user.password
     );
     if (!isValidPassword) {
       return NextResponse.json(
         { message: "Invalid password" },
-        { status: 400 },
+        { status: 400 }
       );
     }
     // token data
@@ -44,7 +44,13 @@ export async function POST(req: NextRequest) {
       httpOnly: true,
     });
     return response;
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message:
+          error instanceof Error ? error.message : "Something went wrong",
+      },
+      { status: 500 }
+    );
   }
 }

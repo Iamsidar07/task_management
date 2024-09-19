@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     if (user) {
       return NextResponse.json(
         { message: "User with this email already exist." },
-        { status: 400 },
+        { status: 400 }
       );
     }
     const salt = await bcryptjs.genSalt(10);
@@ -25,7 +25,13 @@ export async function POST(req: NextRequest) {
     });
     console.log(newUser);
     return NextResponse.json(newUser, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message:
+          error instanceof Error ? error.message : "Something went wrong",
+      },
+      { status: 500 }
+    );
   }
 }

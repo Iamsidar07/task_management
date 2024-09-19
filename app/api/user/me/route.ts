@@ -10,7 +10,13 @@ export async function GET(req: NextRequest) {
     const data = getDataFromToken(req);
     const user = await User.findById(data.id).select("-password");
     return NextResponse.json(user, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message:
+          error instanceof Error ? error.message : "Something went wrong",
+      },
+      { status: 500 }
+    );
   }
 }

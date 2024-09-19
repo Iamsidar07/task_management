@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { FormEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const description =
   "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account";
@@ -22,7 +23,7 @@ export function SignupForm() {
   const router = useRouter();
   const signup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.target as HTMLFormElement);
     const firstName = formData.get("firstName");
     const lastName = formData.get("lastName");
     const email = formData.get("email");
@@ -43,6 +44,7 @@ export function SignupForm() {
       router.push("/signin");
     } catch (error) {
       console.log("Failed to signup", error);
+      toast.error(error instanceof Error ? error.message : "Failed to signup");
     }
   };
   return (

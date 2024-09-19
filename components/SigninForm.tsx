@@ -15,6 +15,7 @@ import { FormEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "./ui/checkbox";
+import { toast } from "sonner";
 
 export const description =
   "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.";
@@ -23,7 +24,7 @@ export function SigninForm() {
   const router = useRouter();
   const signin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.target as HTMLFormElement);
     const remember = Boolean(formData.get("remember"));
     const email = formData.get("email");
     const password = formData.get("password");
@@ -41,6 +42,7 @@ export function SigninForm() {
       router.push("/");
     } catch (error) {
       console.log("Failed to signin", error);
+      toast.error(error instanceof Error ? error.message : "Failed to signin");
     }
   };
 

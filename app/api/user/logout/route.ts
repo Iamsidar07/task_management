@@ -10,7 +10,13 @@ export async function GET() {
       httpOnly: true,
     });
     return response;
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message:
+          error instanceof Error ? error.message : "Something went wrong",
+      },
+      { status: 500 }
+    );
   }
 }
