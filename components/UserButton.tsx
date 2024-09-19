@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import Logout from "./Logout";
 import { Separator } from "./ui/separator";
+import { Button } from "./ui/button";
 
 const UserButton = () => {
   const { data, error, isLoading } = useQuery({
@@ -27,13 +28,15 @@ const UserButton = () => {
   if (!data) return null;
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger disabled={isLoading}>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          data?.firstName?.slice(0, 1) + data?.lastName?.slice(0, 1)
-        )}
-      </DropdownMenuTrigger>
+      <Button variant="secondary" asChild className="uppercase" size={"sm"}>
+        <DropdownMenuTrigger>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            data?.firstName?.slice(0, 1) + data?.lastName?.slice(0, 1)
+          )}
+        </DropdownMenuTrigger>
+      </Button>
       <DropdownMenuContent className="w-[270px]">
         <DropdownMenuItem className="font-bold">
           {data.firstName} {data.lastName}
@@ -41,7 +44,7 @@ const UserButton = () => {
         <DropdownMenuItem className="text-sm">{data.email}</DropdownMenuItem>
         <Separator />
         <DropdownMenuItem>
-          <Logout />
+          <Logout />{" "}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

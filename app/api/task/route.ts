@@ -3,12 +3,15 @@ import { connectToDB } from "@/dbConfig/connectToDB";
 import Task from "@/models/task";
 import { getDataFromToken } from "@/lib/getDataFromToken";
 import { taskCreateSchema, taskUpdateSchema } from "@/schemas/task";
+import mongoose from "mongoose";
 
 connectToDB();
+
 export async function GET(req: NextRequest) {
   try {
     const data = getDataFromToken(req);
     const tasks = await Task.find({ userId: data.id });
+    console.log(data);
     return NextResponse.json(tasks, { status: 200 });
   } catch (error) {
     return NextResponse.json(
@@ -16,7 +19,7 @@ export async function GET(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -35,7 +38,7 @@ export async function DELETE(req: NextRequest) {
     }
     return NextResponse.json(
       { message: "Delete successfully", success: true },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     return NextResponse.json(
@@ -43,7 +46,7 @@ export async function DELETE(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -60,14 +63,14 @@ export async function PATCH(req: NextRequest) {
         userId,
         _id: id,
       },
-      data,
+      data
     );
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 400 });
     }
     return NextResponse.json(
       { message: "Delete successfully", task, success: true },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     return NextResponse.json(
@@ -75,7 +78,7 @@ export async function PATCH(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -83,23 +86,30 @@ export async function PATCH(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const reqBody = await req.json();
-    const data = taskCreateSchema.parse(reqBody);
+    console.log(reqBody);
+    const data = taskCreateSchema.parse(
+      reqBody?.dueDate
+        ? { ...reqBody, dueDate: new Date(reqBody.dueDate) }
+        : reqBody
+    );
+    console.log({ data });
     const { id: userId } = getDataFromToken(req);
     const newTask = await Task.create({
       ...data,
       userId,
     });
     return NextResponse.json(
-      { message: "Delete successfully", task: newTask, success: true },
-      { status: 200 },
+      { message: "Created successfully", task: newTask, success: true },
+      { status: 200 }
     );
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
