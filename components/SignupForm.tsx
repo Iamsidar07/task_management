@@ -11,16 +11,18 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FormEvent } from "react";
-import axios from "axios";
+import { FormEvent, useTransition } from "react";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 export const description =
   "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account";
 
 export function SignupForm() {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const signup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -34,19 +36,27 @@ export function SignupForm() {
       email,
       password,
     });
-    try {
-      await axios.post("/api/user/signup", {
-        firstName,
-        lastName,
-        email,
-        password,
-      });
-      router.push("/signin");
-    } catch (error) {
-      console.log("Failed to signup", error);
-      toast.error(error instanceof Error ? error.message : "Failed to signup");
-    }
+
+    startTransition(async () => {
+      try {
+        await axios.post("/api/user/signup", {
+          firstName,
+          lastName,
+          email,
+          password,
+        });
+        router.push("/signin");
+      } catch (error) {
+        console.log("Failed to signup", error);
+        toast.error(
+          error instanceof AxiosError
+            ? JSON.parse(error.response?.data.message)[0].message
+            : "Failed to signup",
+        );
+      }
+    });
   };
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -91,7 +101,10 @@ export function SignupForm() {
             <Label htmlFor="password">Password</Label>
             <Input id="password" name="password" type="password" />
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" disabled={isPending} className="w-full">
+            {isPending ? (
+              <Loader className="animate-spin w-4 h-4 mr-1.5" />
+            ) : null}
             Create an account
           </Button>
         </form>

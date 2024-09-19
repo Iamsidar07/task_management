@@ -11,17 +11,20 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FormEvent } from "react";
-import axios from "axios";
+import { FormEvent, useTransition } from "react";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "./ui/checkbox";
 import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 export const description =
   "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.";
 
 export function SigninForm() {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const signin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -33,17 +36,23 @@ export function SigninForm() {
       email,
       password,
     });
-    try {
-      await axios.post("/api/user/signin", {
-        remember,
-        email,
-        password,
-      });
-      router.push("/");
-    } catch (error) {
-      console.log("Failed to signin", error);
-      toast.error(error instanceof Error ? error.message : "Failed to signin");
-    }
+    startTransition(async () => {
+      try {
+        await axios.post("/api/user/signin", {
+          remember,
+          email,
+          password,
+        });
+        router.push("/");
+      } catch (error) {
+        console.log("Failed to signin", error);
+        toast.error(
+          error instanceof AxiosError
+            ? JSON.parse(error.response?.data.message)[0].message
+            : "Failed to signin",
+        );
+      }
+    });
   };
 
   return (
@@ -67,12 +76,7 @@ export function SigninForm() {
             />
           </div>
           <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>
-            </div>
+            <Label htmlFor="password">Password</Label>
             <Input name="password" id="password" type="password" required />
           </div>
           <div className="gap-2 flex">
@@ -82,13 +86,16 @@ export function SigninForm() {
             </Label>
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" disabled={isPending} className="w-full">
+            {isPending ? (
+              <Loader className="animate-spin w-4 h-4 mr-1.5" />
+            ) : null}
             Login
           </Button>
         </form>
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}
-          <Link href="#" className="underline">
+          <Link href="/signup" className="underline">
             Sign up
           </Link>
         </div>
