@@ -29,12 +29,12 @@ export interface Task {
 }
 
 function CreateTask() {
-  const client = useQueryClient();
+  const queryClient = useQueryClient();
 
   const createTaskMutation = useMutation({
     mutationFn: async (task: Task) => axios.post("/api/task", task),
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 

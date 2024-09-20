@@ -18,12 +18,13 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const DeleteTask = ({ id }: { id: string }) => {
-  const client = useQueryClient();
+  const queryClient = useQueryClient();
   const handleDeleteTask = useMutation({
     mutationFn: async ({ id }: { id: string }) =>
       axios.delete(`/api/task?id=${id}`),
     onSuccess: async () => {
-      await client.invalidateQueries({ queryKey: ["tasks"] });
+      console.log("trying to revalidate query tasks");
+      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
       toast.success("Deleted successfully");
     },
     onError: () => {

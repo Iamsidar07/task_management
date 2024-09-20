@@ -1,6 +1,5 @@
 "use client";
-import { Task } from "@/components/CreateTask";
-import TaskCard from "@/components/TaskCard";
+import TaskList from "@/components/TaskList";
 import axios from "axios";
 import { Loader } from "lucide-react";
 import { useQuery } from "react-query";
@@ -10,6 +9,7 @@ export default function Home() {
   const { data, error, isLoading } = useQuery({
     queryKey: ["tasks"],
     queryFn: async () => {
+      console.log("revalidating...");
       const response = await axios.get("/api/task");
       return response.data;
     },
@@ -20,12 +20,9 @@ export default function Home() {
     return null;
   }
   return (
-    <div>
-      {isLoading ? (
-        <Loader className="animate-spin w-5 h-5 mx-auto" />
-      ) : data ? (
-        data.map((task: Task) => <TaskCard key={task._id} {...task} />)
-      ) : null}
+    <div className="w-full max-w-7xl mx-auto">
+      {isLoading ? <Loader className="w-4 h-4 mx-auto animate-spin" /> : null}
+      {data ? <TaskList data={data} /> : null}
     </div>
   );
 }

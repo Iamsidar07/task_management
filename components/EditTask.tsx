@@ -5,14 +5,14 @@ import TaskForm, { Task } from "./TaskForm";
 import axios from "axios";
 
 const EditTask = ({ existingTask }: { existingTask: Task }) => {
-  console.log({ existingTask });
-  const client = useQueryClient();
+  const queryClient = useQueryClient();
 
   const editTaskMutation = useMutation({
     mutationFn: async (task: Task) =>
       axios.patch(`/api/task?id=${existingTask._id}`, task),
-    onSuccess: () => {
-      client.invalidateQueries({ queryKey: ["tasks"] });
+    onSuccess: async () => {
+      console.log("trying to revalidate");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 

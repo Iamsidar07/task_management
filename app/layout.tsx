@@ -40,7 +40,7 @@ export default function RootLayout({
         >
           <Provider>
             <Navbar />
-            <div className="w-full min-h-screen px-6 sm:px-0 pt-12 sm:pt-20">
+            <div className="w-full min-h-screen px-6 pt-12 sm:pt-20">
               {children}
             </div>
             <Toaster />

@@ -25,8 +25,6 @@ import { FormEvent, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { CalendarIcon, Loader, PencilIcon } from "lucide-react";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "react-query";
-import axios from "axios";
 
 export enum Status {
   "TO_DO" = "TO_DO",
@@ -98,7 +96,10 @@ function TaskForm({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {mode === "create" ? (
-          <Button variant="outline">Add new task</Button>
+          <Button variant="outline">
+            <PencilIcon className="w-3 h-3 mr-1.5" />
+            <span className="hidden sm:inline-block">Add new task</span>
+          </Button>
         ) : (
           <Button variant="outline">
             <PencilIcon className="w-3 h-3 mr-1.5" />

@@ -11,6 +11,17 @@ import {
 import { Badge } from "./ui/badge";
 import EditTask from "./EditTask";
 import DeleteTask from "./DeleteTask";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
+
+export const BORDER_COLORS = [
+  "border-l-green-200",
+  "border-l-yellow-200",
+  "border-l-blue-200",
+  "border-l-gray-200",
+  "border-l-orange-200",
+  "border-l-red-200",
+];
 
 const getStatus = (status: Status) => {
   switch (status) {
@@ -38,7 +49,12 @@ const getPriority = (priority: Priority) => {
 
 const TaskCard = (props: Task) => {
   return (
-    <Card>
+    <Card
+      className={cn(
+        "border-l-4",
+        BORDER_COLORS[Math.floor(Math.random() * BORDER_COLORS.length)],
+      )}
+    >
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
         <CardDescription>{props?.description}</CardDescription>
@@ -48,15 +64,18 @@ const TaskCard = (props: Task) => {
           {getStatus(props.status)}
           {getPriority(props.priority)}
           {/*TODO: Find out if i need to display due date*/}
-          {/* {props.dueDate ? ( */}
-          {/*   <span className="text-sm text-secondary-foreground"> */}
-          {/*     {new Date(props.dueDate).toLocaleString("en", { */}
-          {/*       day: "numeric", */}
-          {/*       month: "short", */}
-          {/*       year: "numeric", */}
-          {/*     })} */}
-          {/*   </span> */}
-          {/* ) : null} */}
+          <Badge>
+            {props.dueDate ? (
+              <span className="flex items-center gap-1">
+                <CalendarIcon className="w-3 h-3" />
+                {new Date(props.dueDate).toLocaleString("en", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+            ) : null}
+          </Badge>
         </div>
       </CardContent>
       <CardFooter className="flex items-center gap-2">

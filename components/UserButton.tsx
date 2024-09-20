@@ -1,47 +1,37 @@
 "use client";
-import axios from "axios";
 import React from "react";
-import { useQuery } from "react-query";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { toast } from "sonner";
-import { Loader } from "lucide-react";
 import Logout from "./Logout";
 import { Separator } from "./ui/separator";
-import { Button } from "./ui/button";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 
 const UserButton = () => {
-  const { data, error, isLoading } = useQuery({
-    queryFn: async () => {
-      const response = await axios.get("/api/user/me");
-      return response.data;
-    },
-  });
-  if (error) {
-    toast.error("Failed to retrieve user profile");
-    return null;
-  }
+  const { data } = useCurrentUser();
   if (!data) return null;
   return (
     <DropdownMenu>
-      <Button variant="secondary" asChild className="uppercase" size={"sm"}>
-        <DropdownMenuTrigger>
-          {isLoading ? (
-            <Loader />
-          ) : (
-            data?.firstName?.slice(0, 1) + data?.lastName?.slice(0, 1)
-          )}
-        </DropdownMenuTrigger>
-      </Button>
-      <DropdownMenuContent className="w-[270px]">
-        <DropdownMenuItem className="font-bold">
+      <DropdownMenuTrigger>
+        {data ? (
+          <Avatar>
+            <AvatarFallback className="uppercase">
+              {data?.firstName?.slice(0, 1) + data?.lastName?.slice(0, 1)}
+            </AvatarFallback>
+          </Avatar>
+        ) : null}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-[170px]">
+        <DropdownMenuItem className="font-bold truncate capitalize">
           {data.firstName} {data.lastName}
         </DropdownMenuItem>
-        <DropdownMenuItem className="text-sm">{data.email}</DropdownMenuItem>
+        <DropdownMenuItem className="text-sm truncate">
+          {data.email}
+        </DropdownMenuItem>
         <Separator />
         <DropdownMenuItem>
           <Logout />{" "}
