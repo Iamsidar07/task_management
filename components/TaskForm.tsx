@@ -21,35 +21,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "./ui/calendar";
-import { FormEvent, useState } from "react";
+import { FormEvent, ReactNode, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { CalendarIcon, Loader, PencilIcon } from "lucide-react";
 import { toast } from "sonner";
-
-export enum Status {
-  "TO_DO" = "TO_DO",
-  "IN_PROGRESS" = "IN_PROGRESS",
-  "COMPLETED" = "COMPLETED",
-}
-
-export enum Priority {
-  "LOW" = "LOW",
-  "MEDIUM" = "MEDIUM",
-  "HIGH" = "HIGH",
-}
-
-export interface Task {
-  _id?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  title: string;
-  description?: string;
-  status: Status;
-  priority: Priority;
-  dueDate?: Date | undefined;
-}
+import { Task, Priority, Status } from "@/types";
 
 interface TaskFormProps {
+  trigger?: ReactNode;
   task?: Task;
   onSubmit: (task: Task) => Promise<void>;
   isOpen: boolean;
@@ -59,6 +38,7 @@ interface TaskFormProps {
 }
 
 function TaskForm({
+  trigger,
   task,
   onSubmit,
   isOpen,
@@ -83,8 +63,15 @@ function TaskForm({
     try {
       await onSubmit(formTask);
       toast.success(
-        `${mode === "create" ? "Task created" : "Task updated"} successfully`,
+        `${mode === "create" ? "Task created" : "Task updated"} successfully`
       );
+      setFormTask({
+        title: "",
+        description: "",
+        status: Status.TO_DO,
+        priority: Priority.LOW,
+        dueDate: undefined,
+      });
       setIsOpen(false);
     } catch (error) {
       console.error("Failed to save task", error);
@@ -95,7 +82,9 @@ function TaskForm({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        {mode === "create" ? (
+        {trigger ? (
+          trigger
+        ) : mode === "create" ? (
           <Button variant="outline">
             <PencilIcon className="w-3 h-3 mr-1.5" />
             <span className="hidden sm:inline-block">Add new task</span>

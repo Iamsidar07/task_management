@@ -1,18 +1,20 @@
+"use client";
 import React from "react";
+import {
+  DraggableProvidedDraggableProps,
+  DraggableProvidedDragHandleProps,
+} from "react-beautiful-dnd";
+import { Priority, Status, Task } from "@/types";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
 import { Badge } from "./ui/badge";
-import EditTask from "./EditTask";
-import DeleteTask from "./DeleteTask";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
-import { Priority, Status, Task } from "@/types";
 
 export const BORDER_COLORS = [
   "border-l-green-200",
@@ -47,27 +49,44 @@ const getPriority = (priority: Priority) => {
   }
 };
 
-const TaskCard = (props: Task) => {
+interface Props {
+  id: string;
+  index: number;
+  task: Task;
+  innerRef: (element: HTMLElement | null) => void;
+  draggableProps: DraggableProvidedDraggableProps;
+  dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
+}
+
+const TaskBoardCard = ({
+  dragHandleProps,
+  draggableProps,
+  innerRef,
+  task,
+}: Props) => {
   return (
     <Card
       className={cn(
         "border-l-4",
-        BORDER_COLORS[Math.floor(Math.random() * BORDER_COLORS.length)]
+        BORDER_COLORS[Math.floor(Math.random() * BORDER_COLORS.length)],
       )}
+      {...draggableProps}
+      {...dragHandleProps}
+      ref={innerRef}
     >
       <CardHeader>
-        <CardTitle>{props.title}</CardTitle>
-        <CardDescription>{props?.description}</CardDescription>
+        <CardTitle>{task.title}</CardTitle>
+        <CardDescription>{task?.description}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-2">
-          {getStatus(props.status)}
-          {getPriority(props.priority)}
-          {props.dueDate ? (
+          {getStatus(task.status)}
+          {getPriority(task.priority)}
+          {task.dueDate ? (
             <Badge>
               <span className="flex items-center gap-1">
                 <CalendarIcon className="w-3 h-3" />
-                {new Date(props.dueDate).toLocaleString("en", {
+                {new Date(task.dueDate).toLocaleString("en", {
                   day: "numeric",
                   month: "short",
                   year: "numeric",
@@ -77,12 +96,8 @@ const TaskCard = (props: Task) => {
           ) : null}
         </div>
       </CardContent>
-      <CardFooter className="flex items-center gap-2">
-        <EditTask existingTask={props} />
-        <DeleteTask id={props._id as string} />
-      </CardFooter>
     </Card>
   );
 };
 
-export default TaskCard;
+export default TaskBoardCard;

@@ -60,16 +60,15 @@ export async function PATCH(req: NextRequest) {
         ? { ...reqBody, dueDate: new Date(reqBody.dueDate) }
         : reqBody,
     );
-    const searchParams = req.nextUrl.searchParams;
-    const id = searchParams.get("id");
     const { id: userId } = getDataFromToken(req);
     const task = await Task.findOneAndUpdate(
       {
         userId,
-        _id: id,
+        _id: data.id,
       },
       data,
     );
+    console.log(task);
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 400 });
     }

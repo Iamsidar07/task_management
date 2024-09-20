@@ -18,7 +18,7 @@ import {
   ChevronUpIcon,
   ListFilterIcon,
 } from "lucide-react";
-import { Priority, Status, Task } from "./TaskForm";
+import { Priority, Status, Task } from "@/types";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { debounce } from "@/lib/utils";
@@ -31,12 +31,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import { useTaskContext } from "./TaskContext";
 
 interface Props {
-  originalData: Task[];
   setSortedData: React.Dispatch<React.SetStateAction<Task[]>>;
 }
-const FilterAndSort = ({ originalData, setSortedData }: Props) => {
+const FilterAndSort = ({ setSortedData }: Props) => {
+  const { data: originalData } = useTaskContext();
   const [filters, setFilters] = useState({
     status: "",
     priority: "",
@@ -87,7 +88,7 @@ const FilterAndSort = ({ originalData, setSortedData }: Props) => {
         task?.description
           ?.toLowerCase()
           .trim()
-          .includes(query.toLowerCase().trim()),
+          .includes(query.toLowerCase().trim())
     );
     setSortedData(result);
   };

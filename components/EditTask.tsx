@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import TaskForm, { Task } from "./TaskForm";
+import TaskForm from "./TaskForm";
 import axios from "axios";
+import { Task } from "@/types";
 
 const EditTask = ({ existingTask }: { existingTask: Task }) => {
   const queryClient = useQueryClient();

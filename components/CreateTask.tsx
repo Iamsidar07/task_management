@@ -1,40 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import TaskForm from "./TaskForm";
+import useBoardStore from "@/store/useBoardStore";
+import { Task } from "@/types";
 
-export enum Status {
-  "TO_DO" = "TO_DO",
-  "IN_PROGRESS" = "IN_PROGRESS",
-  "COMPLETED" = "COMPLETED",
+interface Props {
+  trigger?: ReactNode;
+  task?: Task;
 }
 
-export enum Priority {
-  "LOW" = "LOW",
-  "MEDIUM" = "MEDIUM",
-  "HIGH" = "HIGH",
-}
-
-export interface Task {
-  _id?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  title: string;
-  description?: string;
-  status: Status;
-  priority: Priority;
-  dueDate?: Date | undefined;
-}
-
-function CreateTask() {
+function CreateTask({ trigger, task }: Props) {
+  const getBoards = useBoardStore((state) => state.getBoards);
   const queryClient = useQueryClient();
 
   const createTaskMutation = useMutation({
     mutationFn: async (task: Task) => axios.post("/api/task", task),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      getBoards();
     },
   });
 
@@ -45,6 +31,8 @@ function CreateTask() {
   };
   return (
     <TaskForm
+      trigger={trigger}
+      task={task}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       onSubmit={handleCreateTask}
