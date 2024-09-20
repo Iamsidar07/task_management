@@ -3,7 +3,6 @@ import { connectToDB } from "@/dbConfig/connectToDB";
 import Task from "@/models/task";
 import { getDataFromToken } from "@/lib/getDataFromToken";
 import { taskCreateSchema, taskUpdateSchema } from "@/schemas/task";
-import mongoose from "mongoose";
 
 connectToDB();
 
@@ -19,7 +18,7 @@ export async function GET(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -29,6 +28,7 @@ export async function DELETE(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const id = searchParams.get("id");
     const data = getDataFromToken(req);
+    console.log({ id, userId: data.id });
     const task = await Task.findOneAndDelete({
       userId: data.id,
       _id: id,
@@ -38,15 +38,16 @@ export async function DELETE(req: NextRequest) {
     }
     return NextResponse.json(
       { message: "Delete successfully", success: true },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -54,7 +55,11 @@ export async function DELETE(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const reqBody = await req.json();
-    const data = taskUpdateSchema.parse(reqBody);
+    const data = taskUpdateSchema.parse(
+      reqBody?.dueDate
+        ? { ...reqBody, dueDate: new Date(reqBody.dueDate) }
+        : reqBody,
+    );
     const searchParams = req.nextUrl.searchParams;
     const id = searchParams.get("id");
     const { id: userId } = getDataFromToken(req);
@@ -63,22 +68,23 @@ export async function PATCH(req: NextRequest) {
         userId,
         _id: id,
       },
-      data
+      data,
     );
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 400 });
     }
     return NextResponse.json(
       { message: "Delete successfully", task, success: true },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -90,7 +96,7 @@ export async function POST(req: NextRequest) {
     const data = taskCreateSchema.parse(
       reqBody?.dueDate
         ? { ...reqBody, dueDate: new Date(reqBody.dueDate) }
-        : reqBody
+        : reqBody,
     );
     console.log({ data });
     const { id: userId } = getDataFromToken(req);
@@ -100,7 +106,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json(
       { message: "Created successfully", task: newTask, success: true },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.log(error);
@@ -109,7 +115,7 @@ export async function POST(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
