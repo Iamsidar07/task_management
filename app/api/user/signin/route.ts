@@ -42,10 +42,13 @@ export async function POST(req: NextRequest) {
     });
     response.cookies.set("token", token, {
       httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
     });
     return response;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return NextResponse.json(
       {
         message:

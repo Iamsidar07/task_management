@@ -9,6 +9,8 @@ export async function GET() {
     response.cookies.set("token", "", {
       httpOnly: true,
       secure: true,
+      sameSite: "lax",
+      path: "/",
     });
     return response;
   } catch (error) {
