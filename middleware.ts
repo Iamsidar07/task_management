@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const isPublicPath = publicPath.includes(pathname);
   const token = request.cookies.get("token")?.value || "";
-  console.log(token, token && isPublicPath);
+
   if (token && isPublicPath) {
     return NextResponse.redirect(new URL("/", request.url));
   }
