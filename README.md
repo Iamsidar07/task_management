@@ -1,3 +1,21 @@
+# Taskii - Task Management app with Kanban Board
+
+![Demo](https://cdn.loom.com/sessions/thumbnails/27e0fb7c16d34487842b3fa335c32414-e0ace145ee2c35ac-full-play.gif)
+
+## Tech Stack
+
+- Next.js
+- React
+- Tailwind CSS
+- TypeScript
+- Node.js
+- MongoDB
+- JWT
+- bcryptjs
+- jsonwebtoken
+- React beautiful DND
+- React Query
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
