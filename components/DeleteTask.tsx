@@ -2,7 +2,7 @@
 import React from "react";
 import { Button, buttonVariants } from "./ui/button";
 import { Loader, TrashIcon } from "lucide-react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import {
@@ -16,15 +16,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import useTaskStore from "@/store/useTaskStore";
 
 const DeleteTask = ({ id }: { id: string }) => {
-  const queryClient = useQueryClient();
+  const getTasks = useTaskStore((state) => state.getTasks);
   const handleDeleteTask = useMutation({
     mutationFn: async ({ id }: { id: string }) =>
       axios.delete(`/api/task?id=${id}`),
     onSuccess: async () => {
       console.log("trying to revalidate query tasks");
-      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      getTasks();
       toast.success("Deleted successfully");
     },
     onError: () => {
