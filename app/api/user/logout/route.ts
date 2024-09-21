@@ -6,10 +6,7 @@ export async function GET() {
       message: "Logout successfully",
       success: true,
     });
-    response.cookies.set("token", "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    });
+    response.cookies.delete("token");
     return response;
   } catch (error) {
     return NextResponse.json(
