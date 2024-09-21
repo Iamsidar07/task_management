@@ -31,13 +31,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import useTaskStore from "@/store/useTaskStore";
 
 interface Props {
+  originalData: Task[];
   setSortedData: React.Dispatch<React.SetStateAction<Task[]>>;
 }
-const FilterAndSort = ({ setSortedData }: Props) => {
-  const originalData = useTaskStore((state) => state.tasks);
+const FilterAndSort = ({ setSortedData, originalData }: Props) => {
   const [filters, setFilters] = useState({
     status: "",
     priority: "",
