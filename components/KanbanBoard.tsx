@@ -14,21 +14,16 @@ const KanbanBoard = () => {
   useEffect(() => {
     getBoards();
   }, [getBoards]);
-  console.log({ board });
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination, type } = result;
-    console.log(result);
     if (!destination) return;
 
     //  handle column rearrange
     if (type === "column") {
-      console.log("Moving column", type);
       const entries = Array.from(board.columns.entries());
-      console.log("entries", entries);
       // take item
       const [removed] = entries.splice(source.index, 1);
-      console.log("removed", removed);
       // insert
       entries.splice(destination.index, 0, removed);
       const rearrangeColumn = new Map(entries);
@@ -38,7 +33,6 @@ const KanbanBoard = () => {
     const columns = Array.from(board.columns);
     const startColIndex = columns[Number(source.droppableId)];
     const endColIndex = columns[Number(destination.droppableId)];
-    console.log({ startColIndex, endColIndex, columns });
     if (!startColIndex || !endColIndex) return;
     const startCol = {
       id: startColIndex[0],
@@ -50,7 +44,6 @@ const KanbanBoard = () => {
       tasks: endColIndex[1].tasks,
     };
     if (!startCol || !endCol) return;
-    console.log({ startCol, endCol });
     if (startCol === endCol && source.index === destination.index) return;
     const newTasks = startCol.tasks;
     const [taskMoved] = newTasks.splice(source.index, 1);

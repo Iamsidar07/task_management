@@ -23,7 +23,6 @@ const DeleteTask = ({ id }: { id: string }) => {
     mutationFn: async ({ id }: { id: string }) =>
       axios.delete(`/api/task?id=${id}`),
     onSuccess: async () => {
-      console.log("trying to revalidate query tasks");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       toast.success("Deleted successfully");
     },

@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
   try {
     const data = getDataFromToken(req);
     const tasks = await Task.find({ userId: data.id });
-    console.log(data);
     return NextResponse.json(tasks, { status: 200 });
   } catch (error) {
     return NextResponse.json(
@@ -28,7 +27,6 @@ export async function DELETE(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const id = searchParams.get("id");
     const data = getDataFromToken(req);
-    console.log({ id, userId: data.id });
     const task = await Task.findOneAndDelete({
       userId: data.id,
       _id: id,
@@ -57,7 +55,6 @@ export async function PATCH(req: NextRequest) {
     const reqBody = await req.json();
     const searchParams = req.nextUrl.searchParams;
     const id = searchParams.get("id");
-    console.log("received id");
     const data = taskUpdateSchema.parse(
       reqBody?.dueDate
         ? { ...reqBody, dueDate: new Date(reqBody.dueDate) }
@@ -94,7 +91,6 @@ export async function PATCH(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const reqBody = await req.json();
-    console.log(reqBody);
     const data = taskCreateSchema.parse(
       reqBody?.dueDate
         ? { ...reqBody, dueDate: new Date(reqBody.dueDate) }

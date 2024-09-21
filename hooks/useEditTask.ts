@@ -11,7 +11,6 @@ const useEditTask = ({ id }: { id: string }) => {
   const editTaskMutation = useMutation({
     mutationFn: async (task: Task) => axios.patch(`/api/task?id=${id}`, task),
     onSuccess: async () => {
-      console.log("trying to revalidate");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
