@@ -15,6 +15,7 @@ import {
 import { Badge } from "./ui/badge";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
+import { getBoarderColor } from "./TaskCard";
 
 export const BORDER_COLORS = [
   "border-l-green-200",
@@ -68,7 +69,7 @@ const TaskBoardCard = ({
     <Card
       className={cn(
         "border-l-4",
-        BORDER_COLORS[Math.floor(Math.random() * BORDER_COLORS.length)],
+        getBoarderColor(task.status),
       )}
       {...draggableProps}
       {...dragHandleProps}

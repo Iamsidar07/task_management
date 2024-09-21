@@ -14,16 +14,18 @@ import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Priority, Status, Task } from "@/types";
 
-export const BORDER_COLORS = [
-  "border-l-green-200",
-  "border-l-yellow-200",
-  "border-l-blue-200",
-  "border-l-gray-200",
-  "border-l-orange-200",
-  "border-l-red-200",
-];
+export const getBoarderColor = (status: Status) => {
+  switch (status) {
+    case Status.COMPLETED:
+      return "border-l-green-200";
+    case Status.TO_DO:
+      return "border-l-yellow-200";
+    case Status.IN_PROGRESS:
+      return "border-l-blue-200";
+  }
+};
 
-const getStatus = (status: Status) => {
+export const getStatus = (status: Status) => {
   switch (status) {
     case Status.COMPLETED:
       return <Badge className="bg-green-200 text-green-800">Completed</Badge>;
@@ -36,7 +38,7 @@ const getStatus = (status: Status) => {
   }
 };
 
-const getPriority = (priority: Priority) => {
+export const getPriority = (priority: Priority) => {
   switch (priority) {
     case Priority.LOW:
       return <Badge className="bg-gray-200 text-gray-800">Low</Badge>;
@@ -49,12 +51,7 @@ const getPriority = (priority: Priority) => {
 
 const TaskCard = (props: Task) => {
   return (
-    <Card
-      className={cn(
-        "border-l-4",
-        BORDER_COLORS[Math.floor(Math.random() * BORDER_COLORS.length)]
-      )}
-    >
+    <Card className={cn("border-l-4", getBoarderColor(props.status))}>
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
         <CardDescription>{props?.description}</CardDescription>

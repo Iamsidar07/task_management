@@ -1,24 +1,13 @@
 "use client";
-import React, { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+
 import TaskForm from "./TaskForm";
-import axios from "axios";
 import { Task } from "@/types";
+import useEditTask from "@/hooks/useEditTask";
 
 const EditTask = ({ existingTask }: { existingTask: Task }) => {
-  const queryClient = useQueryClient();
-
-  const editTaskMutation = useMutation({
-    mutationFn: async (task: Task) =>
-      axios.patch(`/api/task?id=${existingTask._id}`, task),
-    onSuccess: async () => {
-      console.log("trying to revalidate");
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    },
+  const { editTaskMutation, isOpen, setIsOpen } = useEditTask({
+    id: existingTask._id as string,
   });
-
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleEditTask = async (task: Task) => {
     await editTaskMutation.mutateAsync(task);
   };

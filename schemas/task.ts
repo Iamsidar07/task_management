@@ -9,7 +9,6 @@ export const taskCreateSchema = z.object({
 });
 
 export const taskUpdateSchema = z.object({
-  id: z.string(),
   title: z.string().optional(),
   description: z.string().optional(),
   status: z.enum(["TO_DO", "IN_PROGRESS", "COMPLETED"]).optional(),

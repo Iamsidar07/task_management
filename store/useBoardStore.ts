@@ -23,12 +23,16 @@ const useBoardStore = create<BoardStore>((set) => ({
   },
   updateInDB: async (task, column) => {
     try {
-      await fetch("/api/task", {
+      await fetch(`/api/task?id=${task._id}`, {
         method: "PATCH",
         body: JSON.stringify({
-          id: task._id,
           status: column,
         }),
+      });
+      // refresh the board
+      set((state) => {
+        state.getBoards();
+        return state;
       });
     } catch (error) {
       console.log(error);

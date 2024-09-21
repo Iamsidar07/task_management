@@ -29,3 +29,10 @@ export interface Task {
   priority: Priority;
   dueDate?: Date | undefined;
 }
+
+export interface User {
+  _id?: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}

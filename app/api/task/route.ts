@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -38,7 +38,7 @@ export async function DELETE(req: NextRequest) {
     }
     return NextResponse.json(
       { message: "Delete successfully", success: true },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.log(error);
@@ -47,7 +47,7 @@ export async function DELETE(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -55,18 +55,21 @@ export async function DELETE(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const reqBody = await req.json();
+    const searchParams = req.nextUrl.searchParams;
+    const id = searchParams.get("id");
+    console.log("received id");
     const data = taskUpdateSchema.parse(
       reqBody?.dueDate
         ? { ...reqBody, dueDate: new Date(reqBody.dueDate) }
-        : reqBody,
+        : reqBody
     );
     const { id: userId } = getDataFromToken(req);
     const task = await Task.findOneAndUpdate(
       {
         userId,
-        _id: data.id,
+        _id: id,
       },
-      data,
+      data
     );
     console.log(task);
     if (!task) {
@@ -74,7 +77,7 @@ export async function PATCH(req: NextRequest) {
     }
     return NextResponse.json(
       { message: "Delete successfully", task, success: true },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.log(error);
@@ -83,7 +86,7 @@ export async function PATCH(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -95,7 +98,7 @@ export async function POST(req: NextRequest) {
     const data = taskCreateSchema.parse(
       reqBody?.dueDate
         ? { ...reqBody, dueDate: new Date(reqBody.dueDate) }
-        : reqBody,
+        : reqBody
     );
     console.log({ data });
     const { id: userId } = getDataFromToken(req);
@@ -105,7 +108,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json(
       { message: "Created successfully", task: newTask, success: true },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.log(error);
@@ -114,7 +117,7 @@ export async function POST(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Something went wrong",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

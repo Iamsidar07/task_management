@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useUserStore from "@/store/useUserStore";
 
 export const description =
   "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.";
@@ -38,6 +39,7 @@ const formSchema = z.object({
 
 export function SigninForm() {
   const router = useRouter();
+  const getUser = useUserStore((state) => state.getUser);
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,10 +52,10 @@ export function SigninForm() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     startTransition(async () => {
       try {
         await axios.post("/api/user/signin", values);
+        getUser();
         router.push("/");
       } catch (error) {
         console.log("Failed to signin", error);

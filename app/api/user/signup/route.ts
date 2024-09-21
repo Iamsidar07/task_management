@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       ...data,
       password: hashedPassword,
     });
-    console.log(newUser);
+
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
     return NextResponse.json(

@@ -1,11 +1,9 @@
 "use client";
 
-import { ReactNode, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
-import axios from "axios";
+import { ReactNode } from "react";
 import TaskForm from "./TaskForm";
-import useBoardStore from "@/store/useBoardStore";
 import { Task } from "@/types";
+import useCreateTask from "@/hooks/useCreateTask";
 
 interface Props {
   trigger?: ReactNode;
@@ -13,18 +11,7 @@ interface Props {
 }
 
 function CreateTask({ trigger, task }: Props) {
-  const getBoards = useBoardStore((state) => state.getBoards);
-  const queryClient = useQueryClient();
-
-  const createTaskMutation = useMutation({
-    mutationFn: async (task: Task) => axios.post("/api/task", task),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      getBoards();
-    },
-  });
-
-  const [isOpen, setIsOpen] = useState(false);
+  const { createTaskMutation, isOpen, setIsOpen } = useCreateTask();
 
   const handleCreateTask = async (task: Task) => {
     await createTaskMutation.mutateAsync(task);

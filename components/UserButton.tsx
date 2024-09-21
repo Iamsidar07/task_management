@@ -8,29 +8,29 @@ import {
 } from "./ui/dropdown-menu";
 import Logout from "./Logout";
 import { Separator } from "./ui/separator";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-
-const UserButton = () => {
-  const { data } = useCurrentUser();
-  if (!data) return null;
+import { User } from "@/types";
+interface Props {
+  user: User;
+}
+const UserButton = ({ user }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        {data ? (
+        {user ? (
           <Avatar>
             <AvatarFallback className="uppercase">
-              {data?.firstName?.slice(0, 1) + data?.lastName?.slice(0, 1)}
+              {user?.firstName?.slice(0, 1) + user?.lastName?.slice(0, 1)}
             </AvatarFallback>
           </Avatar>
         ) : null}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[170px]">
         <DropdownMenuItem className="font-bold truncate capitalize">
-          {data.firstName} {data.lastName}
+          {user.firstName} {user.lastName}
         </DropdownMenuItem>
         <DropdownMenuItem className="text-sm truncate">
-          {data.email}
+          {user.email}
         </DropdownMenuItem>
         <Separator />
         <DropdownMenuItem>

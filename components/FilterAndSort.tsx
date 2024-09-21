@@ -80,8 +80,6 @@ const FilterAndSort = ({ setSortedData }: Props) => {
   };
 
   const searchTask = (query: string) => {
-    console.log("Searching for", query);
-    if (query.trim().length === 0) return;
     const result = originalData.filter(
       (task) =>
         task.title.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
