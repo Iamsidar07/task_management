@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 interface UserStore {
   user: User | null;
-  getUser: () => void;
+  getUser: () => Promise<void>;
   setUserState: (user: User | null) => void;
 }
 
@@ -12,7 +12,7 @@ const useUserStore = create<UserStore>((set) => ({
   getUser: async () => {
     try {
       const res = await fetch("/api/user/me");
-      if(res.status !== 200) return
+      if (res.status !== 200) return;
       const data = await res.json();
       set({ user: data });
     } catch (error) {

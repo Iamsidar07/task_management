@@ -55,7 +55,7 @@ export function SigninForm() {
     startTransition(async () => {
       try {
         await axios.post("/api/user/signin", values);
-        getUser();
+        await getUser();
         router.push("/");
       } catch (error) {
         console.log("Failed to signin", error);
