@@ -8,6 +8,7 @@ export async function GET() {
     });
     response.cookies.set("token", "", {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
     });
     return response;
   } catch (error) {
