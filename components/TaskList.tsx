@@ -1,14 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FilterAndSort from "./FilterAndSort";
 import TaskCard from "./TaskCard";
 import { Loader } from "lucide-react";
-import { useTaskContext } from "./TaskContext";
 import { Task } from "@/types";
+import useTaskStore from "@/store/useTaskStore";
 
 const TaskList = () => {
-  const { data, isLoading } = useTaskContext();
+  const data = useTaskStore((state) => state.tasks);
+  const isLoading = useTaskStore((state) => state.isLoading);
+  const getTasks = useTaskStore((state) => state.getTasks);
   const [sortedData, setSortedData] = useState<Task[]>(data || []);
+
+  useEffect(() => {
+    getTasks();
+  }, [getTasks]);
+
   return (
     <>
       {isLoading ? <Loader className="w-4 h-4 mx-auto animate-spin" /> : null}

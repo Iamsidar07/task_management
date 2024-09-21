@@ -31,13 +31,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { useTaskContext } from "./TaskContext";
+import useTaskStore from "@/store/useTaskStore";
 
 interface Props {
   setSortedData: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 const FilterAndSort = ({ setSortedData }: Props) => {
-  const { data: originalData } = useTaskContext();
+  const originalData = useTaskStore((state) => state.tasks);
   const [filters, setFilters] = useState({
     status: "",
     priority: "",
@@ -47,6 +47,7 @@ const FilterAndSort = ({ setSortedData }: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    if (!originalData) return;
     const filteredData = originalData.filter((task) => {
       const statusMatch = !filters.status || task.status === filters.status;
       const priorityMatch =
@@ -80,6 +81,7 @@ const FilterAndSort = ({ setSortedData }: Props) => {
   };
 
   const searchTask = (query: string) => {
+    if (!originalData) return;
     const result = originalData.filter(
       (task) =>
         task.title.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
