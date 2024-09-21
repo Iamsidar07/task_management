@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import useBoardStore from "@/store/useBoardStore";
 import Column from "./Column";
 import { CustomDroppable } from "./CustomDroppable";

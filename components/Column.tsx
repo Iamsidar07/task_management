@@ -1,5 +1,5 @@
 import React from "react";
-import { Draggable, Droppable } from "react-beautiful-dnd";
+import { Draggable } from "react-beautiful-dnd";
 import { Priority, Status, Task, TypedColumn } from "@/types";
 import { cn } from "@/lib/utils";
 import TaskBoardCard from "./TaskBoardCard";
